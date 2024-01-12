@@ -1,5 +1,8 @@
-package com.example.OnlineBankSystem.service;
+package com.example.OnlineBankSystem.enums;
 
+import com.example.OnlineBankSystem.service.DepositTransaction;
+import com.example.OnlineBankSystem.service.Transaction;
+import com.example.OnlineBankSystem.service.WithdrawalTransaction;
 import lombok.Getter;
 
 @Getter

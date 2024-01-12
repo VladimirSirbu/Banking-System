@@ -26,7 +26,14 @@ public class OnlineBankSystemExceptionHandler {
     @ExceptionHandler({CallNotPermittedException.class})
     public ResponseEntity<Object> handleCallNotPermittedException(final CallNotPermittedException e,
                                                                   final HttpServletRequest request) {
-        log.error("Cannot not permitted: Exception: " + e + ". Request: " + request);
+        log.error("Call not permitted: Exception: " + e + ". Request: " + request);
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE ).build();
+    }
+
+    @ExceptionHandler({AccountInactiveException.class})
+    public ResponseEntity<Object> handleAccountInactiveException(final AccountInactiveException e,
+                                                                  final HttpServletRequest request) {
+        log.error("Account inactive exception: " + e + " Request: " + request);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR ).build();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.OnlineBankSystem.model;
 
+import com.example.OnlineBankSystem.enums.AccountState;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,17 +19,15 @@ public class Account {
 
     private Double balance;
 
+    @Enumerated(EnumType.STRING)
+    private AccountState state;
+
     public void deposit(double amount) {
-        this.balance += amount;
-        System.out.println("Deposited $" + amount + " to account " + accountNumber + ". New balance: $" + balance); // TODO: Implement logging
+        state.deposit(this, amount);
     }
 
     public void withdraw(double amount) {
-        if (this.balance >= amount) {
-            this.balance -= amount;
-            System.out.println("Withdrawn $" + amount + " from account " + accountNumber + ". New balance: $" + balance);
-        } else {
-            System.out.println("Insufficient funds for withdrawal from account " + accountNumber);
-        }
+        state.withdraw(this, amount);
     }
+
 }
