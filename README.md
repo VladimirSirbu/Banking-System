@@ -25,7 +25,25 @@ _________________________________________________________
 
 # 3. Modele de proiectare
 _________________________________________________________
-## 3.1. Command
+## 3.1 Repository
+_________________________________________________________
+Modelul de proiectare repository este un model de proiectare structurală care este utilizat în mod obișnuit în dezvoltarea de software pentru a abstractiza accesul la stocarea datelor, cum ar fi baze de date sau servicii externe.
+Oferă o modalitate de a centraliza logica de acces la date și oferă o interfață coerentă pentru a interacționa cu datele, ascunzând detaliile subiacente ale modului în care datele sunt stocate sau preluate.
+Scopul principal al modelului Repository este de a izola aplicația de detaliile codului de acces la date și de a promova o separare a preocupărilor.
+
+În contextul Spring Framework, adnotarea @Repository este o specializare a adnotării @Component. Indică faptul că o clasă este un repository, iar Spring o va detecta și înregistra automat în timpul scanării componentelor. 
+Adnotarea @Repository servește ca un marker pentru Spring pentru a crea un bean pentru clasa adnotată.
+```java
+@Repository
+public interface AccountRepository extends JpaRepository<Account, Long> {
+
+    @Query("SELECT a FROM Account a")
+    Set<Account> findAllAccounts();
+}
+```
+
+
+## 3.2. Command
 _________________________________________________________
 Modelul de desing **Command** este un model de proiectare comportamentala care transforma o solicitare intr-un obiect, permitand clientilor sa parametrizeze clientii cu diferite solicitari, solicitari in coada si sa suporte operatiuni anulabile. Separa expeditorul si destinatarul unei cereri, incapsuland o cerere ca obiect. Elementele principale ale modelului de comanda sunt: 
 
@@ -101,7 +119,7 @@ Modelul de desing **Command** este un model de proiectare comportamentala care t
     }
 ```
 
-## 3.2 State
+## 3.3 State
 _________________________________________________________
 **State** este un model de design comportamental care permite unui obiect să-și modifice comportamentul atunci când starea sa internă se schimbă. Pare ca și cum obiectul isi schimba clasa.
 
@@ -171,16 +189,16 @@ public enum AccountState implements State {
 **Client**: Clientul este responsabil pentru crearea contextului și stabilirea stării sale inițiale. Clientul interacționează cu contextul pentru a declanșa un comportament specific stării.
 In cazul proiectului, **clientul** este [**Concrete Command**](#concrete-command) din modelul precedent, adica **Deposit Trasaction** sau **WithdrawalTransaction**.
 
-## 3.3 Circuit Breaker
+## 3.4 Circuit Breaker
 _________________________________________________________
 Un **Circuit Breaker** este un model de proiectare utilizat în dezvoltarea de software pentru a îmbunătăți fiabilitatea și toleranța la erori a unui sistem, inclusiv a aplicațiilor Spring Boot. Scopul principal al unui întrerupător este acela de a împiedica un sistem să încerce în mod continuu să execute o operațiune care este probabil să eșueze, ceea ce poate duce la defecțiuni în cascadă și la degradarea în continuare a întregului sistem. Când este implementat un întrerupător, acesta monitorizează starea unei anumite operațiuni sau serviciu. Dacă operațiunea eșuează dincolo de un anumit prag, întrerupătorul „se deschide”, izolând componenta defectă de apeluri ulterioare. Acest lucru previne ca defecțiunea să afecteze întregul sistem. În cazul aplicației mele, întrerupătorul izolează API-ul de baza de date în cazul în care se blochează sau pierde conexiunea cu aplicația.
 Circuit Breaker-ul folosit este din libraria **resilience4j**.
 
 ```java
-    @CircuitBreaker(name = MY_SQL_CIRCUIT_BREAKER)
-    public Set<Account> getAllAccounts() {
-        return accountRepository.findAllAccounts();
-    }
+@CircuitBreaker(name = MY_SQL_CIRCUIT_BREAKER)
+public Set<Account> getAllAccounts() {
+    return accountRepository.findAllAccounts();
+}
 ```
 Cand Circuit Breaker se deschide atunci este aruncata o exceptie **CallNotPermittedException** care poate fi prelucrata (to handle).
 Prin intermediul @ExceptionHandler am setat o metoda care va returna clientului **503 SERVICE_UNAVAILABLE.** panca cand componenta bazei de date isi va reveni.
