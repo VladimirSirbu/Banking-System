@@ -1,3 +1,16 @@
+# Cuprins
+
+- [1. Introducere](#1-introducere)
+  - [1.1 Putin despre business-ul aplicatiei](#11-putin-despre-business-ul-aplicatiei)
+- [2. Stack-ul de Tehnologii](#2-stack-ul-de-tehnologii)
+- [3. Modele de proiectare si arhitectura](#3-modele-de-proiectare-si-arhitectura)
+  - [3.1 Layered (n-Tier) architecure](#31-layered-n-tier-architecure)
+  - [3.2 Repository](#32-repository)
+  - [3.3 Command](#33-command)
+  - [3.4 State](#34-state)
+  - [3.5 Circuit Breaker](#35-circuit-breaker)
+
+
 # 1. Introducere
 _________________________________________________________
 Proiectul presupune implementarea unei applicatii "Bank System" si demonstrarea aplicarii modelelor de proiectare in dezvoltarea de software.
@@ -199,7 +212,7 @@ public enum AccountState implements State {
 ```
 
 **Client**: Clientul este responsabil pentru crearea contextului și stabilirea stării sale inițiale. Clientul interacționează cu contextul pentru a declanșa un comportament specific stării.
-In cazul proiectului, **clientul** este [**Concrete Command**](#concrete-command) din modelul precedent, adica **Deposit Trasaction** sau **WithdrawalTransaction**.
+In cazul proiectului, **clientul** este [**Concrete Command**](#33-command) din modelul precedent, adica **Deposit Trasaction** sau **WithdrawalTransaction**.
 
 ## 3.5 Circuit Breaker
 _________________________________________________________
