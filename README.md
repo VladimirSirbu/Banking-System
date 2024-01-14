@@ -42,7 +42,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 }
 ```
 
-
 ## 3.2. Command
 _________________________________________________________
 Modelul de desing **Command** este un model de proiectare comportamentala care transforma o solicitare intr-un obiect, permitand clientilor sa parametrizeze clientii cu diferite solicitari, solicitari in coada si sa suporte operatiuni anulabile. Separa expeditorul si destinatarul unei cereri, incapsuland o cerere ca obiect. Elementele principale ale modelului de comanda sunt: 
