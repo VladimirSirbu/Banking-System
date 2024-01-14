@@ -23,9 +23,22 @@ _________________________________________________________
 - MySQL: este un sistem de gestionare a bazelor de date relationale (RDBMS - Relational Database Management System) open-source, care ofera o platforma eficienta si fiabila pentru stocarea si gestionarea datelor.
 - Postman: cu acest tool pot efectua operatiuni de request si analiza a raspunsului.
 
-# 3. Modele de proiectare
+# 3. Modele de proiectare si arhitectura
 _________________________________________________________
-## 3.1 Repository
+## 3.1 Layered (n-Tier) architecure
+_________________________________________________________
+Luand in considerare cerintele, cea mai potrivita arhitecura pentru aceasta aplicatie este Layered (n-Tier).
+Acest tip de arhitectură este o abordare utilizată și recomandată pe scară largă pentru construirea de aplicații scalabile, întreținebile și modulare.
+
+Iată cum se mapează straturile (layers) la componentele dintr-o aplicație Spring Boot:
+1. **Presentation Layer (Controller)**:<br>
+Controlerele REST (adnotate cu @RestController) servesc ca strat de prezentare. Aceștia gestionează solicitările HTTP, interacționează cu clienții și returnează răspunsurile HTTP adecvate. Controllerele sunt responsabile pentru primirea intrărilor, invocarea nivelului de servicii și returnarea rezultatelor.
+2. **Service Layer**:<br>
+Stratul de servicii (adnotat cu @Service) conține logica de business a aplicației. Acesta încapsulează logica specifică aplicației și acționează ca un intermediar între controller și repository. Serviciile efectuează operațiuni solicitate de controller, și returnează rezultatele controlorilor.
+3. **Persistence Layer (Repository)**:<br>
+Stratul de repositoriu (adnotat cu @Repository) este responsabil pentru accesul la date și comunicarea cu baza de date. Conține metode pentru efectuarea operațiunilor CRUD și interogarea bazei de date. Spring Data JPA, o parte a proiectului Spring Data, simplifică implementarea stratului de depozit.
+
+## 3.2 Repository
 _________________________________________________________
 Modelul de proiectare repository este un model de proiectare structurală care este utilizat în mod obișnuit în dezvoltarea de software pentru a abstractiza accesul la stocarea datelor, cum ar fi baze de date sau servicii externe.
 Oferă o modalitate de a centraliza logica de acces la date și oferă o interfață coerentă pentru a interacționa cu datele, ascunzând detaliile subiacente ale modului în care datele sunt stocate sau preluate.
@@ -42,7 +55,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 }
 ```
 
-## 3.2. Command
+## 3.3. Command
 _________________________________________________________
 Modelul de desing **Command** este un model de proiectare comportamentala care transforma o solicitare intr-un obiect, permitand clientilor sa parametrizeze clientii cu diferite solicitari, solicitari in coada si sa suporte operatiuni anulabile. Separa expeditorul si destinatarul unei cereri, incapsuland o cerere ca obiect. Elementele principale ale modelului de comanda sunt: 
 
@@ -118,7 +131,7 @@ Modelul de desing **Command** este un model de proiectare comportamentala care t
     }
 ```
 
-## 3.3 State
+## 3.4 State
 _________________________________________________________
 **State** este un model de design comportamental care permite unui obiect să-și modifice comportamentul atunci când starea sa internă se schimbă. Pare ca și cum obiectul isi schimba clasa.
 
@@ -188,7 +201,7 @@ public enum AccountState implements State {
 **Client**: Clientul este responsabil pentru crearea contextului și stabilirea stării sale inițiale. Clientul interacționează cu contextul pentru a declanșa un comportament specific stării.
 In cazul proiectului, **clientul** este [**Concrete Command**](#concrete-command) din modelul precedent, adica **Deposit Trasaction** sau **WithdrawalTransaction**.
 
-## 3.4 Circuit Breaker
+## 3.5 Circuit Breaker
 _________________________________________________________
 Un **Circuit Breaker** este un model de proiectare utilizat în dezvoltarea de software pentru a îmbunătăți fiabilitatea și toleranța la erori a unui sistem, inclusiv a aplicațiilor Spring Boot. Scopul principal al unui întrerupător este acela de a împiedica un sistem să încerce în mod continuu să execute o operațiune care este probabil să eșueze, ceea ce poate duce la defecțiuni în cascadă și la degradarea în continuare a întregului sistem. Când este implementat un întrerupător, acesta monitorizează starea unei anumite operațiuni sau serviciu. Dacă operațiunea eșuează dincolo de un anumit prag, întrerupătorul „se deschide”, izolând componenta defectă de apeluri ulterioare. Acest lucru previne ca defecțiunea să afecteze întregul sistem. În cazul aplicației mele, întrerupătorul izolează API-ul de baza de date în cazul în care se blochează sau pierde conexiunea cu aplicația.
 Circuit Breaker-ul folosit este din libraria **resilience4j**.
