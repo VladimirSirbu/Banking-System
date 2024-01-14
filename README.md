@@ -169,4 +169,32 @@ public enum AccountState implements State {
 ```
 
 **Client**: Clientul este responsabil pentru crearea contextului și stabilirea stării sale inițiale. Clientul interacționează cu contextul pentru a declanșa un comportament specific stării.
-In cazul proiectului, **clientul** este [**Concrete Command**]() din modelul precedent, adica **Deposit Trasaction** sau **WithdrawalTransaction**.
+In cazul proiectului, **clientul** este [**Concrete Command**](#concrete-command) din modelul precedent, adica **Deposit Trasaction** sau **WithdrawalTransaction**.
+
+## 3.3 Circuit Breaker
+_________________________________________________________
+Un **Circuit Breaker** este un model de proiectare utilizat în dezvoltarea de software pentru a îmbunătăți fiabilitatea și toleranța la erori a unui sistem, inclusiv a aplicațiilor Spring Boot. Scopul principal al unui întrerupător este acela de a împiedica un sistem să încerce în mod continuu să execute o operațiune care este probabil să eșueze, ceea ce poate duce la defecțiuni în cascadă și la degradarea în continuare a întregului sistem. Când este implementat un întrerupător, acesta monitorizează starea unei anumite operațiuni sau serviciu. Dacă operațiunea eșuează dincolo de un anumit prag, întrerupătorul „se deschide”, izolând componenta defectă de apeluri ulterioare. Acest lucru previne ca defecțiunea să afecteze întregul sistem. În cazul aplicației mele, întrerupătorul izolează API-ul de baza de date în cazul în care se blochează sau pierde conexiunea cu aplicația.
+Circuit Breaker-ul folosit este din libraria **resilience4j**.
+
+```java
+    @CircuitBreaker(name = MY_SQL_CIRCUIT_BREAKER)
+    public Set<Account> getAllAccounts() {
+        return accountRepository.findAllAccounts();
+    }
+```
+Cand Circuit Breaker se deschide atunci este aruncata o exceptie **CallNotPermittedException** care poate fi prelucrata (to handle).
+Prin intermediul @ExceptionHandler am setat o metoda care va returna clientului **503 SERVICE_UNAVAILABLE.** panca cand componenta bazei de date isi va reveni.
+
+```java
+@Slf4j
+@ControllerAdvice
+public class OnlineBankSystemExceptionHandler {
+    
+    @ExceptionHandler({CallNotPermittedException.class})
+    public ResponseEntity<Object> handleCallNotPermittedException(final CallNotPermittedException e,
+                                                                  final HttpServletRequest request) {
+        log.error("Call not permitted: Exception: " + e + ". Request: " + request);
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE ).build();
+    }
+}
+```
