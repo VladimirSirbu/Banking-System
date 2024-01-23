@@ -1,25 +1,36 @@
 package com.example.OnlineBankSystem.service;
 
+import com.example.OnlineBankSystem.exception.AccountInactiveException;
+import com.example.OnlineBankSystem.model.Transaction;
+import com.example.OnlineBankSystem.model.dto.TransactionDto;
+import com.example.OnlineBankSystem.model.enums.AccountState;
+import com.example.OnlineBankSystem.repository.TransactionRepository;
+import com.example.OnlineBankSystem.service.mapper.TransactionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 public class TransactionService {
 
-    private final AccountService accountService;
+    private final TransactionMapper transactionMapper;
+
+    private final TransactionRepository transactionRepository;
 
     @Transactional
-    public void executeTransaction(TransactionRequest transactionRequest) {
+    public void executeTransaction(TransactionDto transactionDto) {
 
-        var transaction = transactionRequest.getTransactionType().getTransaction();
+        Transaction transaction = transactionMapper.transactionDtoToTransaction(transactionDto);
 
-        var account = accountService.getAccountById(transactionRequest.getAccountId()).get();
+        if (transaction.getAccount().getState().equals(AccountState.INACTIVE))
+            throw new AccountInactiveException("You can not execute any transaction because your account is INACTIVE");
 
-        transaction.setAccount(account);
-        transaction.setAmount(transactionRequest.getAmount());
-
-        transaction.execute();
+        var transactionExecutor = transaction.getTransactionType().getTransactionExecutor();
+        transactionExecutor.execute(transaction.getAccount(), transaction.getAmount());
+        transaction.setCreatedAt(LocalDateTime.now());
+        transactionRepository.save(transaction);
     }
 }

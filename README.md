@@ -135,11 +135,11 @@ Modelul de desing **Command** este un model de proiectare comportamentala care t
         @Transactional
         public void executeTransaction(TransactionRequest transactionRequest) {
 
-            var transaction = transactionRequest.getTransactionType().getTransaction();
+            var transaction1 = transactionRequest.getTransactionType().getTransaction();
 
             // some business logic
 
-            transaction.execute();
+            transaction1.execute();
         }
     }
 ```

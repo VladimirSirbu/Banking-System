@@ -7,8 +7,8 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.example.OnlineBankSystem.service.utilis.OnlineBankSystemConstants.MY_SQL_CIRCUIT_BREAKER;
 
@@ -19,7 +19,6 @@ public class AccountService {
     private final AccountRepository accountRepository;
 
     public Account createAccount(Account account) {
-        // You can add additional validation or business logic here
         return accountRepository.save(account);
     }
 
@@ -29,8 +28,8 @@ public class AccountService {
     }
 
     @CircuitBreaker(name = MY_SQL_CIRCUIT_BREAKER)
-    public Set<Account> getAllAccounts() {
-        return accountRepository.findAllAccounts();
+    public List<Account> getAllAccounts() {
+        return accountRepository.findAll();
     }
 
     public void deleteAccount(Long id) {

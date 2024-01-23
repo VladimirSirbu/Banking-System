@@ -1,15 +1,13 @@
 package com.example.OnlineBankSystem.service;
 
+import com.example.OnlineBankSystem.model.Account;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
-public class WithdrawalTransaction extends Transaction {
+public class WithdrawalTransaction implements TransactionExecutor {
 
     @Override
-    public void execute() {
+    public void execute(Account account, Double amount) {
         account.withdraw(amount);
-        dateTimeTransaction = LocalDateTime.now();
     }
 }

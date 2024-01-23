@@ -1,8 +1,8 @@
 package com.example.OnlineBankSystem.controller;
 
-import com.example.OnlineBankSystem.service.TransactionRequest;
+import com.example.OnlineBankSystem.model.dto.TransactionDto;
 import com.example.OnlineBankSystem.service.TransactionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,20 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/transactions")
+@RequiredArgsConstructor
 public class TransactionController {
 
     private final TransactionService transactionService;
 
-    @Autowired
-    public TransactionController(TransactionService transactionService) {
-        this.transactionService = transactionService;
-    }
-
     @PostMapping
-    public ResponseEntity<String> doTransaction(@RequestBody TransactionRequest transactionRequest) {
-        transactionService.executeTransaction(transactionRequest);
+    public ResponseEntity<String> doTransaction(@RequestBody TransactionDto transactionDto) {
+        transactionService.executeTransaction(transactionDto);
         return ResponseEntity.ok("Transaction successful");
     }
-
 
 }

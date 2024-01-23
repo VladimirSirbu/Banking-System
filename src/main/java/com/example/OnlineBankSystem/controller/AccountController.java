@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * 1. Create/Delete(close) account
@@ -28,8 +28,8 @@ public class AccountController {
     }
 
     @GetMapping
-    public ResponseEntity<Set<Account>> getAllAccounts() {
-        return ResponseEntity.of(Optional.ofNullable(accountService.getAllAccounts()));
+    public ResponseEntity<List<Account>> getAllAccounts() {
+        return ResponseEntity.of(Optional.ofNullable(accountService.getAllAccounts())); // TODO: when fetch, in postman not show all object
     }
 
     @GetMapping("/{id}")
