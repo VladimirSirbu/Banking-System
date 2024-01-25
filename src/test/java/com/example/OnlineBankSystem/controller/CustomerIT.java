@@ -1,6 +1,9 @@
 package com.example.OnlineBankSystem.controller;
 
+import com.example.OnlineBankSystem.model.Account;
 import com.example.OnlineBankSystem.model.Customer;
+import com.example.OnlineBankSystem.model.enums.AccountState;
+import com.example.OnlineBankSystem.model.enums.AccountType;
 import com.example.OnlineBankSystem.repository.AccountRepository;
 import com.example.OnlineBankSystem.repository.CustomerRepository;
 import org.junit.jupiter.api.BeforeAll;
@@ -131,6 +134,38 @@ public class CustomerIT {
         assertThrows(NoSuchElementException.class, () -> {
             accountRepository.findById(104L).get();
         });
+    }
+
+    @Test
+    void saveCustomerWithManyAccounts() {
+        Account checkingAccount = Account.builder()
+                .accountNumber("RO122353456")
+                .balance(200.0)
+                .state(AccountState.ACTIVE)
+                .accountType(AccountType.CHECKING)
+                .build();
+
+        Account savingAccount = Account.builder()
+                .accountNumber("RO122353451")
+                .balance(600.0)
+                .state(AccountState.ACTIVE)
+                .accountType(AccountType.SAVING)
+                .build();
+
+        Customer customer = Customer.builder()
+                .firstName("Johnny")
+                .lastName("Deep")
+                .email("johnny.deep@gmail.com")
+                .accounts(List.of(checkingAccount, savingAccount))
+                .build();
+
+        savingAccount.setCustomer(customer);
+        checkingAccount.setCustomer(customer);
+
+        Customer savedCustomer = customerRepository.save(customer);
+
+        assertThat(savedCustomer).isNotNull();
+        assertEquals(2, savedCustomer.getAccounts().size());
     }
 
 }

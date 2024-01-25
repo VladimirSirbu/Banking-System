@@ -13,7 +13,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class CustomerService {
 
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
     public Customer saveCustomer(Customer customer) {
        return customerRepository.save(customer);
