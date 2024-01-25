@@ -35,4 +35,15 @@ public class Address {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + id +
+                ", street='" + street + '\'' +
+                ", city='" + city + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", country='" + country + '\'' +
+                ", customerId=" + customer.getId() +
+                '}';
+    }
 }

@@ -6,10 +6,7 @@ import com.example.OnlineBankSystem.model.enums.AccountType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -59,4 +56,16 @@ public class Account {
             throw new TransactionExecutionException("Transaction Exception! Amount " + amount + " exceeds the limit of your balance");
     }
 
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", accountNumber='" + accountNumber + '\'' +
+                ", balance=" + balance +
+                ", state=" + state +
+                ", accountType=" + accountType +
+                ", customerId=" + customer.getId() +
+                ", transactions=" + transactions +
+                '}';
+    }
 }

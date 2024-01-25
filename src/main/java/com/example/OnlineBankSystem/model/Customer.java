@@ -41,4 +41,16 @@ public class Customer {
         this.address = address;
         this.address.setCustomer(this);
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", address=" + address +
+                ", accounts=" + accounts +
+                '}';
+    }
 }

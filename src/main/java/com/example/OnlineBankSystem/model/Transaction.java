@@ -3,10 +3,7 @@ package com.example.OnlineBankSystem.model;
 import com.example.OnlineBankSystem.model.enums.TransactionType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -37,4 +34,14 @@ public class Transaction {
     @JoinColumn(name = "account_id")
     private Account account;
 
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", transactionType=" + transactionType +
+                ", amount=" + amount +
+                ", createdAt=" + createdAt +
+                ", accountId=" + account.getId() +
+                '}';
+    }
 }
